@@ -26,9 +26,21 @@ using System.IO;
 
 namespace WindowBinauralizer._1
 {
-
+    
     public partial class Form1 : Form
     {
+
+        public String reaperProjectLocation = "C:\\Users\\Admin\\OneDrive\\Dokumente\\REAPER Media\\";
+        public String reaperIniPath = @"C:\Users\Admin\AppData\Roaming\REAPER\REAPER.ini";
+        public String reaperPath = @"C:\Program Files\REAPER (x64)\reaper.exe";
+        public String ReaperScriptPath = @"C:\Users\Admin\AppData\Roaming\REAPER\Scripts\changeBinaural0.lua";
+        public String reaperProject1 = "ambisonic.rpp";
+        public String reaperProject2 = "ambisonic_1.RPP";
+        public String reaperProject3 = "ambisonic_2.RPP";
+        public String reaperProject4 = "ambisonic_3.RPP";
+        public String reaperProject5 = "ambisonic_4.RPP";
+
+        public String soundvolumeViewPath = "C:\\Users\\Admin\\Downloads\\soundvolumeview-x64\\SoundVolumeView.exe";
 
         //Screendata (this includes multiple screens as well)
         private int minX = Screen.AllScreens.Min(screen => screen.Bounds.Left);
@@ -143,7 +155,7 @@ namespace WindowBinauralizer._1
                         if (session.State == AudioSessionState.AudioSessionStateActive)
                         {
                             var process = Process.GetProcessById((int)session.GetProcessID);
-                            reroutAudioSource(process.Id.ToString(), defaultName);
+                            reroutAudioSource(process.Id.ToString(), defaultName, soundvolumeViewPath);
                         }
                     }
                 }
@@ -171,19 +183,19 @@ namespace WindowBinauralizer._1
 
             //Activate all 5 Reaper streams that are already set to listen to different Cables and update their data via a single script repetetively 
 
-            reaperIniInstance("CABLE Output (VB-Audio Virtual", "C:\\Users\\Admin\\OneDrive\\Dokumente\\REAPER Media\\ambisonic.rpp");
+            reaperIniInstance("CABLE Output (VB-Audio Virtual",reaperProjectLocation + reaperProject1);
             await loadReaper();
             await Task.Delay(5000);
-            reaperIniInstance("CABLE-A Output (VB-Audio Cable", "C:\\Users\\Admin\\OneDrive\\Dokumente\\REAPER Media\\ambisonic_1.RPP");
+            reaperIniInstance("CABLE-A Output (VB-Audio Cable", reaperProjectLocation + reaperProject2);
             await loadReaper();
             await Task.Delay(4000);
-            reaperIniInstance("CABLE-B Output (VB-Audio Cable", "C:\\Users\\Admin\\OneDrive\\Dokumente\\REAPER Media\\ambisonic_2.RPP");
+            reaperIniInstance("CABLE-B Output (VB-Audio Cable", reaperProjectLocation + reaperProject3);
             await loadReaper();
             await Task.Delay(4000);
-            reaperIniInstance("CABLE-C Output (VB-Audio Cable", "C:\\Users\\Admin\\OneDrive\\Dokumente\\REAPER Media\\ambisonic_3.RPP");
+            reaperIniInstance("CABLE-C Output (VB-Audio Cable", reaperProjectLocation + reaperProject4);
             await loadReaper();
             await Task.Delay(4000);
-            reaperIniInstance("CABLE-D Output (VB-Audio Cable", "C:\\Users\\Admin\\OneDrive\\Dokumente\\REAPER Media\\ambisonic_4.RPP");
+            reaperIniInstance("CABLE-D Output (VB-Audio Cable", reaperProjectLocation + reaperProject5);
             await loadReaper();
             await Task.Delay(4000);
 
@@ -249,7 +261,7 @@ namespace WindowBinauralizer._1
                             if (process.ProcessName == "reaper" || count == 1)
                             {
 
-                                reroutAudioSource(process.Id.ToString(), defaultName);
+                                reroutAudioSource(process.Id.ToString(), defaultName, soundvolumeViewPath);
                             }
                             //else calculate position of the tab and change the script for reaper calls
                             //also display information
@@ -290,7 +302,7 @@ namespace WindowBinauralizer._1
                         string cable = freeCables.Dequeue();
                         cable = cable.Split('(')[0];
                         cable = cable.TrimEnd(' ');
-                        reroutAudioSource(process.Id.ToString(), cable);
+                        reroutAudioSource(process.Id.ToString(), cable, soundvolumeViewPath);
 
                     }
                 }
@@ -367,15 +379,15 @@ namespace WindowBinauralizer._1
 
             //call the correct reaper programm
             string reaperChannel = "";
-            if (endpoint.FriendlyName.Contains("CABLE-A")) reaperChannel = "ambisonic_1.RPP";
+            if (endpoint.FriendlyName.Contains("CABLE-A")) reaperChannel = reaperProject2;
             else
-            if (endpoint.FriendlyName.Contains("CABLE-B")) reaperChannel = "ambisonic_2.RPP";
+            if (endpoint.FriendlyName.Contains("CABLE-B")) reaperChannel = reaperProject3;
             else
-            if (endpoint.FriendlyName.Contains("CABLE-C")) reaperChannel = "ambisonic_3.RPP";
+            if (endpoint.FriendlyName.Contains("CABLE-C")) reaperChannel = reaperProject4;
             else
-            if (endpoint.FriendlyName.Contains("CABLE-D")) reaperChannel = "ambisonic_4.RPP";
+            if (endpoint.FriendlyName.Contains("CABLE-D")) reaperChannel = reaperProject5;
             else
-                reaperChannel = "ambisonic.rpp";
+                reaperChannel = reaperProject1;
 
             //change the script
             ChangeBinauralPosition(azi, elev, reaperChannel);
@@ -438,15 +450,14 @@ namespace WindowBinauralizer._1
         private async Task reaperIniInstance(String channel, String project)
         {
             //Write BinauralScript
-            string iniPath = @"C:\Users\Admin\AppData\Roaming\REAPER\REAPER.ini";
 
-            if (!File.Exists(iniPath))
+            if (!File.Exists(reaperIniPath))
             {
                 Console.WriteLine("REAPER.ini does not exist.");
                 return;
             }
 
-            string[] lines = File.ReadAllLines(iniPath);
+            string[] lines = File.ReadAllLines(reaperIniPath);
             bool inAudioConfigSection = false;
             bool projectSet = false;
 
@@ -492,7 +503,7 @@ namespace WindowBinauralizer._1
             }
 
             // Write the changes back to the file
-            File.WriteAllLines(iniPath, lines);
+            File.WriteAllLines(reaperIniPath, lines);
 
             return;
         }
@@ -500,7 +511,6 @@ namespace WindowBinauralizer._1
         //starts reaper minimized
         private async Task loadReaper()
         {
-            string reaperPath = @"C:\Program Files\REAPER (x64)\reaper.exe";
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.FileName = reaperPath;
             startInfo.WindowStyle = ProcessWindowStyle.Minimized;
@@ -513,7 +523,6 @@ namespace WindowBinauralizer._1
         //changes the reaper binaural script to the given azi, elev and channel
         private async void ChangeBinauralPosition(String azimuth, String elevation, String reaperChannel)
         {
-            string filePath = @"C:\Users\Admin\AppData\Roaming\REAPER\Scripts\changeBinaural0.lua";
 
             string lines = "-- Get the master track\r\n" +
                 "local targetProjectName = \"" + reaperChannel + "\"\r\n" +
@@ -538,16 +547,16 @@ namespace WindowBinauralizer._1
                 "  reaper.TrackFX_SetParam(track, fx_index, elevation_param_index, elevation_value)\r\n" +
                 "\r\n  reaper.UpdateArrange() -- Update the arrangement view to reflect changes\r\n" +
                 "  end\r\n";
-            File.WriteAllText(filePath, lines);
+            File.WriteAllText(ReaperScriptPath, lines);
             await Task.Delay(100);
         }
 
 
 
         //rerouts an audiotab to a specific cable via cmd commands
-        private static void reroutAudioSource(string pid, string cable)
+        private static void reroutAudioSource(string pid, string cable, string path)
         {
-            string soundvolumeViewPath = "C:\\Users\\Admin\\Downloads\\soundvolumeview-x64\\SoundVolumeView.exe";
+            string soundvolumeViewPath = path;
 
             using (Process process = new Process())
             {
