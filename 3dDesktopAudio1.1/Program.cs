@@ -1,4 +1,4 @@
-namespace _3dDesktopAudio1._1
+namespace WindowBinauralizer._1
 {
     internal static class Program
     {

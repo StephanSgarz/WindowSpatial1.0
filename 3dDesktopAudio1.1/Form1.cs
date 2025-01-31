@@ -6,7 +6,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
-using static _3dDesktopAudio1._1.Form1;
+using static WindowBinauralizer._1.Form1;
 using NAudio.Dmo;
 using static System.Collections.Specialized.BitVector32;
 using Microsoft.VisualBasic.Devices;
@@ -24,7 +24,7 @@ using System.Text.RegularExpressions;
 using System.IO;
 
 
-namespace _3dDesktopAudio1._1
+namespace WindowBinauralizer._1
 {
 
     public partial class Form1 : Form
