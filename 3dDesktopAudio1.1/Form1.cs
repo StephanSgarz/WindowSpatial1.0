@@ -22,6 +22,7 @@ using System.ComponentModel.Design;
 using System.Threading;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Reflection;
 
 
 namespace WindowBinauralizer._1
@@ -30,17 +31,26 @@ namespace WindowBinauralizer._1
     public partial class Form1 : Form
     {
 
+        public string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.txt");
+        /*
         public String reaperProjectLocation = "C:\\Users\\Admin\\OneDrive\\Dokumente\\REAPER Media\\";
-        public String reaperIniPath = @"C:\Users\Admin\AppData\Roaming\REAPER\REAPER.ini";
-        public String reaperPath = @"C:\Program Files\REAPER (x64)\reaper.exe";
-        public String ReaperScriptPath = @"C:\Users\Admin\AppData\Roaming\REAPER\Scripts\changeBinaural0.lua";
-        public String reaperProject1 = "ambisonic.rpp";
-        public String reaperProject2 = "ambisonic_1.RPP";
-        public String reaperProject3 = "ambisonic_2.RPP";
-        public String reaperProject4 = "ambisonic_3.RPP";
-        public String reaperProject5 = "ambisonic_4.RPP";
-
+        public String reaperIniPath = "C:\\Users\\Admin\\AppData\\Roaming\\REAPER\\REAPER.ini";
+        public String reaperPath = "C:\\Program Files\\REAPER (x64)\\reaper.exe";
+        public String reaperScriptPath = "C:\\Users\\Admin\\AppData\\Roaming\\REAPER\\Scripts\\changeBinaural0.lua";
         public String soundvolumeViewPath = "C:\\Users\\Admin\\Downloads\\soundvolumeview-x64\\SoundVolumeView.exe";
+        */
+        public String reaperProjectLocation = "";
+        public String reaperIniPath = "";
+        public String reaperPath = "";
+        public String reaperScriptPath = "";
+        public String reaperProject1 = "";
+        public String reaperProject2 = "";
+        public String reaperProject3 = "";
+        public String reaperProject4 = "";
+        public String reaperProject5 = "";
+        public String soundvolumeViewPath = "";
+
+
 
         //Screendata (this includes multiple screens as well)
         private int minX = Screen.AllScreens.Min(screen => screen.Bounds.Left);
@@ -94,6 +104,7 @@ namespace WindowBinauralizer._1
         private void Form1_Load(object sender, EventArgs e)
         {
             cts = new CancellationTokenSource();
+            calculateLocations(filePath);
             monitoringTask = MonitorAudioSessionsAsync(cts.Token);
         }
 
@@ -180,6 +191,9 @@ namespace WindowBinauralizer._1
         //opens the reaper tabs and calls the main function on startup.
         private async Task MonitorAudioSessionsAsync(CancellationToken cancellationToken)
         {
+
+            //load location data out of config file
+            //await calculateLocations(filePath);
 
             //Activate all 5 Reaper streams that are already set to listen to different Cables and update their data via a single script repetetively 
 
@@ -547,7 +561,7 @@ namespace WindowBinauralizer._1
                 "  reaper.TrackFX_SetParam(track, fx_index, elevation_param_index, elevation_value)\r\n" +
                 "\r\n  reaper.UpdateArrange() -- Update the arrangement view to reflect changes\r\n" +
                 "  end\r\n";
-            File.WriteAllText(ReaperScriptPath, lines);
+            File.WriteAllText(reaperScriptPath, lines);
             await Task.Delay(100);
         }
 
@@ -569,6 +583,43 @@ namespace WindowBinauralizer._1
                 process.Start();        // Wait for the process to finish.
                 process.WaitForExit();
             }
+        }
+        private void calculateLocations(string filePath)
+        {
+
+
+            if (!File.Exists(filePath))
+            {
+                return;
+            }
+
+            foreach (string line in File.ReadLines(filePath))
+            {
+                
+                if (line.Contains("="))
+                {
+                    string[] parts = line.Split(new[] { '=' }, 2);
+                    if (parts.Length == 2)
+                    {
+                        string variable = parts[0].Trim();
+                        string value = parts[1].Trim();
+                        Type type = typeof(Form1);
+
+                        FieldInfo fieldInfo = type.GetField(variable, BindingFlags.Public | BindingFlags.Instance);
+
+                        if (fieldInfo != null)
+                        {
+                            // Set the new value
+                            fieldInfo.SetValue(this, value);
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
+                }
+            }
+            return;
         }
     }
 }
