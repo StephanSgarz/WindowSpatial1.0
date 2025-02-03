@@ -30,15 +30,9 @@ namespace WindowBinauralizer._1
     
     public partial class Form1 : Form
     {
-
+        //calculates the filepath for the config file
         public string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.txt");
-        /*
-        public String reaperProjectLocation = "C:\\Users\\Admin\\OneDrive\\Dokumente\\REAPER Media\\";
-        public String reaperIniPath = "C:\\Users\\Admin\\AppData\\Roaming\\REAPER\\REAPER.ini";
-        public String reaperPath = "C:\\Program Files\\REAPER (x64)\\reaper.exe";
-        public String reaperScriptPath = "C:\\Users\\Admin\\AppData\\Roaming\\REAPER\\Scripts\\changeBinaural0.lua";
-        public String soundvolumeViewPath = "C:\\Users\\Admin\\Downloads\\soundvolumeview-x64\\SoundVolumeView.exe";
-        */
+
         public String reaperProjectLocation = "";
         public String reaperIniPath = "";
         public String reaperPath = "";
@@ -584,9 +578,10 @@ namespace WindowBinauralizer._1
                 process.WaitForExit();
             }
         }
+
+        //reads the config file for all locations and overrides the variables
         private void calculateLocations(string filePath)
         {
-
 
             if (!File.Exists(filePath))
             {
