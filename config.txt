@@ -1,0 +1,13 @@
+Config File: Don't change the order of these variables. Adjust only the paths to your current Setup.
+This file needs to be in the same folder as the .exe file.
+
+reaperProjectLocation = C:\Users\Admin\OneDrive\Dokumente\REAPER Media\
+reaperIniPath = C:\Users\Admin\AppData\Roaming\REAPER\REAPER.ini
+reaperPath = C:\Program Files\REAPER (x64)\reaper.exe
+reaperScriptPath = C:\Users\Admin\AppData\Roaming\REAPER\Scripts\changeBinaural0.lua
+reaperProject1 = ambisonic.rpp
+reaperProject2 = ambisonic_1.RPP
+reaperProject3 = ambisonic_2.RPP
+reaperProject4 = ambisonic_3.RPP
+reaperProject5 = ambisonic_4.RPP
+soundvolumeViewPath = C:\Users\Admin\Downloads\soundvolumeview-x64\SoundVolumeView.exe
