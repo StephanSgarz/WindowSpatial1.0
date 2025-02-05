@@ -27,4 +27,5 @@ Keep in mind, that other versions may also be compatible with this program.
 
 # Setup
 Find the Full Setup-Guide on: 
+
 Also make sure to change the config file to match your installation-locations.
