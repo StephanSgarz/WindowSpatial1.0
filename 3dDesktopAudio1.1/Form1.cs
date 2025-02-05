@@ -200,22 +200,33 @@ namespace WindowBinauralizer._1
             //await calculateLocations(filePath);
 
             //Activate all 5 Reaper streams that are already set to listen to different Cables and update their data via a single script repetetively 
-
+            listBox1.Items.Clear();
+            listBox1.Items.Add("Opening Reaper Tabs (0/5)");
             reaperIniInstance("CABLE Output (VB-Audio Virtual", reaperProjectLocation + reaperProject1);
             await loadReaper();
             await Task.Delay(5000);
+            listBox1.Items.Clear();
+            listBox1.Items.Add("Opening Reaper Tabs (1/5)");
             reaperIniInstance("CABLE-A Output (VB-Audio Cable", reaperProjectLocation + reaperProject2);
             await loadReaper();
             await Task.Delay(4000);
+            listBox1.Items.Clear();
+            listBox1.Items.Add("Opening Reaper Tabs (2/5)");
             reaperIniInstance("CABLE-B Output (VB-Audio Cable", reaperProjectLocation + reaperProject3);
             await loadReaper();
             await Task.Delay(4000);
+            listBox1.Items.Clear();
+            listBox1.Items.Add("Opening Reaper Tabs (3/5)");
             reaperIniInstance("CABLE-C Output (VB-Audio Cable", reaperProjectLocation + reaperProject4);
             await loadReaper();
             await Task.Delay(4000);
+            listBox1.Items.Clear();
+            listBox1.Items.Add("Opening Reaper Tabs (4/5)");
             reaperIniInstance("CABLE-D Output (VB-Audio Cable", reaperProjectLocation + reaperProject5);
             await loadReaper();
             await Task.Delay(4000);
+            listBox1.Items.Clear();
+            listBox1.Items.Add("Opening Reaper Tabs (5/5)");
             ListenerLoop(cancellationToken);
         }
 
