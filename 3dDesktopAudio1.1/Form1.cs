@@ -116,34 +116,45 @@ namespace WindowBinauralizer._1
             listBox1 = new ListBox();
             button1 = new System.Windows.Forms.Button();
             SuspendLayout();
-
-            //listBox1
+            // 
+            // listBox1
+            // 
+            listBox1.AllowDrop = true;
+            listBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            listBox1.Font = new Font("Segoe UI", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             listBox1.FormattingEnabled = true;
-            listBox1.ItemHeight = 15;
+            listBox1.ItemHeight = 12;
             listBox1.Location = new Point(12, 7);
             listBox1.Name = "listBox1";
-            listBox1.Size = new Size(921, 364);
+            listBox1.Size = new Size(296, 160);
             listBox1.TabIndex = 0;
-            //button1
-            button1.Location = new Point(858, 382);
+            // 
+            // button1
+            // 
+            button1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            button1.Location = new Point(233, 179);
             button1.Name = "button1";
-            button1.Size = new Size(75, 23);
+            button1.Size = new Size(75, 29);
             button1.TabIndex = 1;
             button1.Text = "Close";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
-            //Form1
-            ClientSize = new Size(957, 417);
+            // 
+            // Form1
+            // 
+            ClientSize = new Size(318, 220);
             Controls.Add(button1);
             Controls.Add(listBox1);
             Name = "Form1";
             ResumeLayout(false);
         }
+
         //closes the programm and shuts down the reaper processes.
         //also routs all audiotabs back to the default audio
         private async void newFormClosing(object sender, FormClosingEventArgs e)
         {
             cts.Cancel();
+            Thread.Sleep(200);
 
             var deviceEnumerator = new MMDeviceEnumerator();
             var defaultEndpoint = deviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
@@ -181,8 +192,7 @@ namespace WindowBinauralizer._1
             }
         }
 
-        //Loops continuously until canceled,
-        //opens the reaper tabs and calls the main function on startup.
+        //opens the reaper tabs and calls the main loop on startup.
         private async Task MonitorAudioSessionsAsync(CancellationToken cancellationToken)
         {
 
@@ -191,7 +201,7 @@ namespace WindowBinauralizer._1
 
             //Activate all 5 Reaper streams that are already set to listen to different Cables and update their data via a single script repetetively 
 
-            reaperIniInstance("CABLE Output (VB-Audio Virtual",reaperProjectLocation + reaperProject1);
+            reaperIniInstance("CABLE Output (VB-Audio Virtual", reaperProjectLocation + reaperProject1);
             await loadReaper();
             await Task.Delay(5000);
             reaperIniInstance("CABLE-A Output (VB-Audio Cable", reaperProjectLocation + reaperProject2);
@@ -206,28 +216,36 @@ namespace WindowBinauralizer._1
             reaperIniInstance("CABLE-D Output (VB-Audio Cable", reaperProjectLocation + reaperProject5);
             await loadReaper();
             await Task.Delay(4000);
+            ListenerLoop(cancellationToken);
+        }
 
-
-            //Loops the main function and displays information about Audiotabs
-            while (!cancellationToken.IsCancellationRequested)
+        //Loops continuously until canceled, and changes the displayed information
+        //Runs a seperate Task to calculate active audio tabs
+        private void ListenerLoop (CancellationToken cancellationToken) 
+        {
+            Task.Run(() =>
             {
-                //main function
-                List<string> currentSessions = GetActiveAudioSessions();
-
-                Invoke(new Action(() =>
+                //Loops the main function and displays information about Audiotabs
+                while (!cancellationToken.IsCancellationRequested)
                 {
+                    //main function
+                    List<string> currentSessions = GetActiveAudioSessions();
 
-                    listBox1.Items.Clear();
-                    if (currentSessions != null)
+                    BeginInvoke(new Action(() =>
                     {
-                        foreach (var session in currentSessions)
+
+                        listBox1.Items.Clear();
+                        if (currentSessions != null)
                         {
-                            listBox1.Items.Add(session);
+                            foreach (var session in currentSessions)
+                            {
+                                listBox1.Items.Add(session);
+                            }
                         }
-                    }
-                }));
-                await Task.Delay(100, cancellationToken);
-            }
+                    }));
+                    //Thread.Sleep(100); //could maybe be uncapped
+                }
+            }, cancellationToken);
         }
 
         //Checks for active audiosessions and delegates them to a free Cable if any are free.
