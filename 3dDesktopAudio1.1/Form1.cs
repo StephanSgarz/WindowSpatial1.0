@@ -569,13 +569,13 @@ namespace WindowBinauralizer._1
                 "\r\n" +
                 "  -- Find the SPARTA Binauraliser FX (assuming it's the first FX, index 0)\r\n" +
                 "  local fx_index = 0\r\n\r\n" +
-                "  -- Parameter indices for azimuth and elevation (these might vary; adjust if needed)\r\n" +
+                "  -- Parameter indices for azimuth and elevation\r\n" +
                 "  local azimuth_param_index = 9 -- Adjust if azimuth is on a different parameter index\r\n" +
                 "  local elevation_param_index = 10 -- Adjust if elevation is on a different parameter index\r\n" +
                 "\r\n" +
                 "  -- New values for azimuth and elevation\r\n  " +
-                "local azimuth_value = " + azimuth + " -- Range is typically 0.0 to 1.0\r\n" +
-                "  local elevation_value = " + elevation + " -- Range is typically 0.0 to 1.0\r\n" +
+                "local azimuth_value = " + azimuth + "\r\n" +
+                "  local elevation_value = " + elevation + "\r\n" +
                 "\r\n" +
                 "  -- Set the azimuth parameter\r\n" +
                 "  reaper.TrackFX_SetParam(track, fx_index, azimuth_param_index, azimuth_value)\r\n" +
