@@ -6,7 +6,7 @@ Before you start, know that some aspects are not yet fully fleshed out and unfor
 
 If you find a bug or possibly even a fix, contact me at: e11910593@student.tuwien.ac.at
 
-Before you can use this program, you need to have these Installations ready.
+Before you can use this program, you need to have the following installations ready.
 
 Keep in mind, that other versions may also be compatible with this program.
 
