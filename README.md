@@ -1,4 +1,7 @@
 # WindowBinauralizer
+Thank you for checking out The Window Binauralizer Prototype!
+Before you start, know that some aspects are not yet fully fleshed out and unforeseen errors may occur.
+If you find a bug or possibly even a fix, contact me at: e11910593@student.tuwien.ac.at
 
 # Additional Installations:
 Before you can use this program, you need to have these Installations ready.
