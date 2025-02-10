@@ -26,6 +26,6 @@ Keep in mind, that other versions may also be compatible with this program.
 ------------------------------------------
 
 # Setup
-Find the Full Setup-Guide on: 
+Find the Full Setup-Guide on: https://www.vr.tuwien.ac.at/projects/audio-spatialization-of-windows/
 
 Also make sure to change the config file to match your installation-locations.
